@@ -64,14 +64,21 @@ namespace SalesWPFApp
 
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            Product p = new Product();
-            p.CategoryId = int.Parse(txtCategoryId.Text);
-            p.ProductName = txtProductName.Text;
-            p.Weight = txtWeight.Text;
-            p.UnitPrice = decimal.Parse(txtUnitPrice.Text);
-            p.UnitsInStock = int.Parse(txtUnitInStock.Text);
-            productRepository.addProduct(p);
-            LoadData();
+            if (txtCategoryId.Text.Trim() == "")
+            {
+                MessageBox.Show("CatgoryId is required!!!", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Product p = new Product();
+                p.CategoryId = int.Parse(txtCategoryId.Text);
+                p.ProductName = txtProductName.Text;
+                p.Weight = txtWeight.Text;
+                p.UnitPrice = decimal.Parse(txtUnitPrice.Text);
+                p.UnitsInStock = int.Parse(txtUnitInStock.Text);
+                productRepository.addProduct(p);
+                LoadData();
+            } 
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
@@ -91,9 +98,16 @@ namespace SalesWPFApp
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            Product product = db.Products.FirstOrDefault(x => x.ProductId == int.Parse(txtProductId.Text));
-            productRepository.deleteProduct(product);
-            LoadData();
+            if (MessageBox.Show("Are you sure?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Product product = db.Products.FirstOrDefault(x => x.ProductId == int.Parse(txtProductId.Text));
+                productRepository.deleteProduct(product);
+                LoadData();
+            }
+            else
+            {
+                MessageBox.Show("Delete operation Terminated");
+            }
         }
 
         private void btnSearch_Click(object sender, RoutedEventArgs e)

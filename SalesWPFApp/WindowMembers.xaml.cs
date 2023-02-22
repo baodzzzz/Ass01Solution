@@ -69,29 +69,37 @@ namespace SalesWPFApp
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             Member member = new Member();
-            if (!CheckEmail(txtEmail.Text))
+            if(txtEmail.Text.Trim() == "")
             {
-                MessageBox.Show("Bạn phải đúng định dạng email", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                txtEmail.Focus();
-                return;
+                MessageBox.Show("Email is required!!!", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                member.Email = txtEmail.Text;
-                member.CompanyName = txtCompanyName.Text;
-                member.City = txtCity.Text;
-                member.Country = txtCountry.Text;
-                member.Password = txtPassword.Text;
-                memberRepository.addMember(member);
-                LoadData();
+                if (!CheckEmail(txtEmail.Text))
+                {
+                    MessageBox.Show("You must input correct email format!!!", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+                    txtEmail.Focus();
+                    return;
+                }
+                else
+                {
+                    member.Email = txtEmail.Text;
+                    member.CompanyName = txtCompanyName.Text;
+                    member.City = txtCity.Text;
+                    member.Country = txtCountry.Text;
+                    member.Password = txtPassword.Text;
+                    memberRepository.addMember(member);
+                    LoadData();
+                }
             }
+           
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)
         {
             if (!CheckEmail(txtEmail.Text))
             {
-                MessageBox.Show("Bạn phải đúng định dạng email", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("You must input correct email format!!!", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
                 txtEmail.Focus();
                 return;
             }
@@ -113,9 +121,17 @@ namespace SalesWPFApp
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            Member member = db.Members.FirstOrDefault(x => x.MemberId == int.Parse(txtMemId.Text));
-            memberRepository.deleteMember(member);
-            LoadData();
+            if (MessageBox.Show("Are you sure?", "Delete Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Member member = db.Members.FirstOrDefault(x => x.MemberId == int.Parse(txtMemId.Text));
+                memberRepository.deleteMember(member);
+                LoadData();
+            }
+            else
+            {
+                MessageBox.Show("Delete operation Terminated");
+            }
+         
         }
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)

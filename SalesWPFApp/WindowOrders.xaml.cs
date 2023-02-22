@@ -61,8 +61,8 @@ namespace SalesWPFApp
         {
             LoadData();
         }
-
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        
+        public void onRefresh ()
         {
             txtOrderId.Text = "";
             cbMember.Text = "";
@@ -72,24 +72,30 @@ namespace SalesWPFApp
             txtFreight.Text = "";
         }
 
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            onRefresh();
+        }
+
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            // Regex regex = new Regex("(\\D)\\s*([.\\d,]+)\r\n");
-            // Match match = regex.Match(txtFreight.Text);
-            // if (!match.Success)
-            // {
-             //    MessageBox.Show("Bạn phải đúng định dạng Freight", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-              //  txtFreight.Focus();
-               // return;
-            //}
-            Order o = new Order();
-            o.MemberId = int.Parse(cbMember.SelectedValue.ToString());
-            o.OrderDate = (DateTime)dpOrderDate.SelectedDate;
-            o.RequiredDate = (DateTime)dpRequiredDate.SelectedDate;
-            o.ShippedDate = (DateTime)dpShippedDate.SelectedDate;
-            o.Freight = decimal.Parse(txtFreight.Text);
-            orderRepository.addOrder(o);
-            LoadData();
+            try
+            {
+                Order o = new Order();
+                o.MemberId = int.Parse(cbMember.SelectedValue.ToString());
+                o.OrderDate = (DateTime)dpOrderDate.SelectedDate;
+                o.RequiredDate = (DateTime)dpRequiredDate.SelectedDate;
+                o.ShippedDate = (DateTime)dpShippedDate.SelectedDate;
+                o.Freight = decimal.Parse(txtFreight.Text);
+                orderRepository.addOrder(o);
+                onRefresh();
+                LoadData();
+            }
+            catch
+            {
+                MessageBox.Show("Something wrong!!", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+          
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e)

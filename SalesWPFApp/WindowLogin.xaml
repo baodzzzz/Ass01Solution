@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SalesWPFApp"
         mc:Ignorable="d"
-        Title="WindowLogin" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Login" Height="450" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <TextBlock Height="40" HorizontalAlignment="Center" Margin="0,50,0,0" Name="LoginHeading" Text="Login:" VerticalAlignment="Top" FontSize="25" FontStretch="ExtraCondensed"/>
         <TextBlock Height="23" HorizontalAlignment="Left" Margin="220,120,0,0" Name="textBlock1" Text="Email" VerticalAlignment="Top" Width="67" />

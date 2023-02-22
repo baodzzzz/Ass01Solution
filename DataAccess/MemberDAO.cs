@@ -48,7 +48,7 @@ namespace DataAccess
 
         public void deleteMember(Member member)
         {
-            db.Remove<Member>(member);
+            db.Members.Remove(member);
             if (db.SaveChanges() > 0)
             {
                 MessageBox.Show("Record removed successfully");

@@ -26,9 +26,12 @@ namespace BusinessObject
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-                optionsBuilder.UseSqlServer(config.GetConnectionString("ASS1_DB"));
+                var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+                IConfigurationRoot configuration = builder.Build();
+                optionsBuilder.UseSqlServer(configuration.GetConnectionString("prn221db"));
+
             }
         }
 
@@ -37,8 +40,6 @@ namespace BusinessObject
             modelBuilder.Entity<Member>(entity =>
             {
                 entity.ToTable("Member");
-
-                entity.Property(e => e.MemberId).ValueGeneratedNever();
 
                 entity.Property(e => e.City)
                     .HasMaxLength(15)
@@ -79,24 +80,22 @@ namespace BusinessObject
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.MemberId)
                     .HasConstraintName("FK__Order__MemberId__267ABA7A");
-
-                entity.HasOne(d => d.OrderNavigation)
-                    .WithOne(p => p.Order)
-                    .HasForeignKey<Order>(d => d.OrderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_OrderDetail1");
             });
 
             modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => e.OrderId)
-                    .HasName("PK__OrderDet__C3905BCF8CD4A422");
+                entity.HasKey(e => new { e.OrderId, e.ProductId })
+                    .HasName("PK__OrderDet__C3905BCF8C01C09B");
 
                 entity.ToTable("OrderDetail");
 
-                entity.Property(e => e.OrderId).ValueGeneratedNever();
-
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OrderDetail_Order");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.OrderDetails)
